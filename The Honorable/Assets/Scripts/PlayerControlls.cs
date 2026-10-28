@@ -54,11 +54,11 @@ public class PlayerControlls : MonoBehaviour
 
         if (direction.x < 0)
         {
-            spriteRenderer.flipX = false;
+            spriteRenderer.flipX = true;
         }
         else if (direction.x > 0)
         {
-            spriteRenderer.flipX = true;
+            spriteRenderer.flipX = false;
         }
     }
 
