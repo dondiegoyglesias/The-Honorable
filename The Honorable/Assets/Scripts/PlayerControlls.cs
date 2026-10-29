@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -17,9 +18,15 @@ public class PlayerControlls : MonoBehaviour
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private float localGravity = 1.0f;
 
+    [Header("Attack Settings")]
+    [SerializeField] private GameObject attackObject;
+    private Collider2D attackCollider;
+    private bool attack;
+
     private Animator anim;
     private SpriteRenderer spriteRenderer;
     private Rigidbody2D rb;
+
     
 
     void Awake()
@@ -39,6 +46,8 @@ public class PlayerControlls : MonoBehaviour
     {
         Move();
         Jump();
+        Attack();
+        AnimatorManager();
 
     }
 
@@ -91,6 +100,24 @@ public class PlayerControlls : MonoBehaviour
         }
     }
 
+    void Attack()
+    {
+        attack = Input.GetButtonDown("Fire1");
+
+        if (attack)
+        {
+            StartCoroutine(OnAttack());
+        }
+    }
+
+    IEnumerator OnAttack()
+    {
+        yield return new WaitForSeconds(0.3f);
+        attackCollider.enabled = true;
+        yield return new WaitForSeconds(1f);
+        attackCollider.enabled = false;
+    }
+
     public bool Grounded()
     {
         return Physics2D.OverlapBox(sensorGround.position, sensorSize, 0, groundLayer);
@@ -102,8 +129,21 @@ public class PlayerControlls : MonoBehaviour
         Gizmos.DrawCube(sensorGround.position, sensorSize);
     }
 
+    public int MovementRun()
+    {
+        return (int)direction.x;
+    }
+
+    public int MovementJump()
+    {
+        return (int)Vector2.up.y;
+    }
+
     void AnimatorManager()
     {
-
+        anim.SetInteger("pMove", MovementRun());
+        anim.SetInteger("pJump", MovementJump());
+        anim.SetBool("pGround", Grounded());
+        anim.SetBool("pAttack", attack);
     }
 }

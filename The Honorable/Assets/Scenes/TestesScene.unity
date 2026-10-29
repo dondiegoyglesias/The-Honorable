@@ -1831,7 +1831,7 @@ MonoBehaviour:
   currentJumpTime: 0
   jumpTimeDuration: 0.01
   sensorGround: {fileID: 193598039}
-  sensorSize: {x: 0.6, y: 0.6, z: 0}
+  sensorSize: {x: 1, y: 1, z: 0}
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
