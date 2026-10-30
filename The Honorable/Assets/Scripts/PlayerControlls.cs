@@ -20,8 +20,14 @@ public class PlayerControlls : MonoBehaviour
 
     [Header("Attack Settings")]
     [SerializeField] private GameObject attackObject;
-    private Collider2D attackCollider;
+    [SerializeField] private Collider2D attackCollider;
     private bool attack;
+
+    [Header("Life Settings")]
+    [SerializeField] int life;
+    [SerializeField] int maxLife = 100;
+    private bool isHitting;
+    private bool isDead;
 
     private Animator anim;
     private SpriteRenderer spriteRenderer;
@@ -39,6 +45,7 @@ public class PlayerControlls : MonoBehaviour
     void Start()
     {
         rb.gravityScale = localGravity;
+        life = maxLife;
     }
 
     
@@ -118,6 +125,30 @@ public class PlayerControlls : MonoBehaviour
         attackCollider.enabled = false;
     }
 
+    public void TakeDamage(int damage)
+    {
+        life -= damage;
+
+        if (life > 0)
+        {
+            isHitting = true;
+            StartCoroutine(HitAnimation());
+        }
+
+        else if (life <= 0)
+        {
+            isDead = true;
+            Destroy(gameObject, 1f);
+            
+        }
+    }
+
+    IEnumerator HitAnimation()
+    {
+        yield return new WaitForSeconds(0.5f);
+        isHitting = false;
+    }
+
     public bool Grounded()
     {
         return Physics2D.OverlapBox(sensorGround.position, sensorSize, 0, groundLayer);
@@ -145,5 +176,7 @@ public class PlayerControlls : MonoBehaviour
         anim.SetInteger("pJump", MovementJump());
         anim.SetBool("pGround", Grounded());
         anim.SetBool("pAttack", attack);
+        anim.SetBool("pHitting", isHitting);
+        anim.SetBool("pDeath", isDead);
     }
 }
