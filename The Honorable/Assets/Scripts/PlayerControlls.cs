@@ -29,6 +29,13 @@ public class PlayerControlls : MonoBehaviour
     private bool isHitting;
     private bool isDead;
 
+    [Header("Knockback Settings")]
+    public float knockbackForce;
+    public float knockbackCount;
+    public float knockbackTime;
+    public bool isKnockbackRigth;
+
+
     private Animator anim;
     private SpriteRenderer spriteRenderer;
     private Rigidbody2D rb;
@@ -64,6 +71,7 @@ public class PlayerControlls : MonoBehaviour
         OnJump();
     }
 
+
     void Move()
     {
         direction = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")) * moveSpeed;
@@ -80,7 +88,38 @@ public class PlayerControlls : MonoBehaviour
 
     void OnMove()
     {
-        rb.linearVelocity = new Vector2(direction.x, rb.linearVelocityY);
+        /* if (knockbackCount <= 0)
+         {
+             rb.linearVelocity = new Vector2(direction.x, rb.linearVelocityY);
+         }
+         else
+         {
+             if (isKnockbackRigth)
+             {
+                 rb.linearVelocity = new Vector2(-knockbackForce, knockbackForce);
+             }
+             if (!isKnockbackRigth)
+             {
+                 rb.linearVelocity = new Vector2(knockbackForce, knockbackForce);
+             }
+         }
+        */
+        if (knockbackCount <= 0)
+        {
+            rb.linearVelocity = new Vector2(direction.x, rb.linearVelocity.y);
+        }
+        else
+        {
+            if (isKnockbackRigth)
+            {
+                rb.linearVelocity = new Vector2(-knockbackForce, knockbackForce);
+            }
+            if (!isKnockbackRigth)
+            {
+                rb.linearVelocity = new Vector2(knockbackForce, knockbackForce);
+            }
+            knockbackCount -= Time.deltaTime;
+        }
     }
 
     void Jump()
@@ -139,7 +178,6 @@ public class PlayerControlls : MonoBehaviour
         {
             isDead = true;
             Destroy(gameObject, 1f);
-            
         }
     }
 

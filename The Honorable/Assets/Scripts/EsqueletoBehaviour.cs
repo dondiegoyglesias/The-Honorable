@@ -11,17 +11,18 @@ public class EsqueletoBehaviour : MonoBehaviour
     [SerializeField] private float distanceWakeUp;
     [SerializeField] private float distanceAttack;
 
-    [SerializeField] Vector3 posicaoInicial;
+
 
     private int esqueletoLife = 30;
 
     private bool attacking;
     private bool wakeUp;
     private bool AnimationIsDead;
-
+    PlayerControlls playerControlls;
 
 
     Collider2D collision;
+    Rigidbody2D rb;
     Animator animator;
     private SpriteRenderer spriteRenderer;
 
@@ -29,7 +30,9 @@ public class EsqueletoBehaviour : MonoBehaviour
     {
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
-        
+        collision = GetComponent<Collider2D>();
+        rb = GetComponent<Rigidbody2D>();
+
     }
 
     void Start()
@@ -67,6 +70,7 @@ public class EsqueletoBehaviour : MonoBehaviour
              Move();
         }
     }
+
 
     void Move()
     {
@@ -112,9 +116,9 @@ public class EsqueletoBehaviour : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other)
         {
 
-
         if (other.tag == "Sword")
         {
+
             esqueletoLife -= 10;
             print("Dano recebido");
 
