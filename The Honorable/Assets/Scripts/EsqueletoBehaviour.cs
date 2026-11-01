@@ -120,7 +120,6 @@ public class EsqueletoBehaviour : MonoBehaviour
         {
 
             esqueletoLife -= 10;
-            print("Dano recebido");
 
 
             if (esqueletoLife <= 0)

@@ -15,11 +15,17 @@ public class OlhoVoadorBehaviour : MonoBehaviour
     private bool attacking;
     private bool wakeUp;
 
-    PlayerControlls playerControlls;
-
     Collider2D collision;
     Rigidbody2D rb;
     private SpriteRenderer spriteRenderer;
+
+    void Awake()
+    {
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        collision = GetComponent<Collider2D>();
+        rb = GetComponent<Rigidbody2D>();
+
+    }
 
     void Start()
     {
@@ -105,7 +111,6 @@ public class OlhoVoadorBehaviour : MonoBehaviour
         {
 
             olhoVoadorLife -= 10;
-            print("Dano recebido");
 
 
             if (olhoVoadorLife <= 0)
