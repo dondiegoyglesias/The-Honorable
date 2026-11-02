@@ -50,24 +50,22 @@ public class EsqueletoBehaviour : MonoBehaviour
 
     void WakeUp()
     {
-        if (wakeUp == false)
+        if (!wakeUp)
         {
             if (Vector2.Distance(transform.position, player.transform.position) < distanceWakeUp)
             {
                 wakeUp = true;
             }
-
+            return; 
         }
 
-        
         if (Vector2.Distance(transform.position, player.transform.position) < distanceAttack)
         {
-             Attack();
+            Attack();
         }
-
         else
         {
-             Move();
+            Move();
         }
     }
 

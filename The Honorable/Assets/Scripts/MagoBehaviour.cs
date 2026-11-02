@@ -8,7 +8,7 @@ public class MagoBehaviour : MonoBehaviour
     [SerializeField] private Transform[] orbSpawnPoints;
     [SerializeField] private Transform[] teleportPoints;
 
-    private int magoLife = 150;
+    public int magoLife = 150;
     private bool AnimationIsDead;
 
     Collider2D collision;
@@ -17,11 +17,11 @@ public class MagoBehaviour : MonoBehaviour
     SpriteRenderer spriteRenderer;
 
     [Header("Configuração de Ataques")]
-    public float orbCooldown = 1.5f;
-    public float restTime = 3f;
-    public float explosionChargeTime = 2f;
+    public float orbCooldown = 2f;
+    public float restTime = 5f;
+    public float explosionChargeTime = 3f;
 
-    // Flags de estado
+
     public bool isExplosion;
     public bool isHurt;
     public bool isOrbing;
@@ -53,29 +53,24 @@ public class MagoBehaviour : MonoBehaviour
             spriteRenderer.flipX = true;
     }
 
-    // ------------------- ATAQUES -------------------
     IEnumerator AttackPattern()
     {
         while (!AnimationIsDead)
         {
-            // 1. Disparar 3 orbes
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < 5; i++)
             {
                 SpawnOrb();
                 isOrbing = true;
                 yield return new WaitForSeconds(orbCooldown);
-                isOrbing = false; // reset após cada orb
+                isOrbing = false; 
             }
 
-            // 2. Descansar
             yield return new WaitForSeconds(restTime);
 
-            // 3. Carregar e executar explosão
             isExplosion = true;
             yield return new WaitForSeconds(explosionChargeTime);
             isExplosion = false;
 
-            // 4. Teleportar
             Teleport();
         }
     }
@@ -111,7 +106,6 @@ public class MagoBehaviour : MonoBehaviour
             magoLife -= 10;
             isHurt = true;
 
-            // reset automático após um curto tempo
             Invoke(nameof(ResetHurt), 0.2f);
 
             if (magoLife <= 0)
@@ -127,7 +121,6 @@ public class MagoBehaviour : MonoBehaviour
         isHurt = false;
     }
 
-    // ------------------- ANIMATOR -------------------
     void AnimatorManager()
     {
         animator.SetBool("pExplosion", isExplosion);

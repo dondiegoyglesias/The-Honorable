@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class PlayerControlls : MonoBehaviour
 {
@@ -8,6 +9,9 @@ public class PlayerControlls : MonoBehaviour
     [Header("Move Settings")]
     [SerializeField] float moveSpeed;
     private Vector2 direction;
+
+    [Header("UI Settings")]
+    [SerializeField] private Slider lifeBar;
 
     [Header("Jump Settings")]
     [SerializeField] float jumpForce;
@@ -27,7 +31,7 @@ public class PlayerControlls : MonoBehaviour
     [SerializeField] int life;
     [SerializeField] int maxLife = 100;
     private bool isHitting;
-    private bool isDead;
+    public bool isDead;
 
     [Header("Knockback Settings")]
     public float knockbackForce;
@@ -53,6 +57,12 @@ public class PlayerControlls : MonoBehaviour
     {
         rb.gravityScale = localGravity;
         life = maxLife;
+
+        if (lifeBar != null)
+        {
+            lifeBar.maxValue = maxLife;
+            lifeBar.value = life;
+        }
     }
 
     
@@ -88,22 +98,7 @@ public class PlayerControlls : MonoBehaviour
 
     void OnMove()
     {
-        /* if (knockbackCount <= 0)
-         {
-             rb.linearVelocity = new Vector2(direction.x, rb.linearVelocityY);
-         }
-         else
-         {
-             if (isKnockbackRigth)
-             {
-                 rb.linearVelocity = new Vector2(-knockbackForce, knockbackForce);
-             }
-             if (!isKnockbackRigth)
-             {
-                 rb.linearVelocity = new Vector2(knockbackForce, knockbackForce);
-             }
-         }
-        */
+
         if (knockbackCount <= 0)
         {
             rb.linearVelocity = new Vector2(direction.x, rb.linearVelocity.y);
@@ -124,20 +119,17 @@ public class PlayerControlls : MonoBehaviour
 
     void Jump()
     {
-        if (Input.GetButtonDown("Jump") && Grounded() == true)
+        if (Input.GetButtonDown("Jump") && Grounded())
         {
-            currentJumpTime = jumpTimeDuration;
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
         }
-        else if (Input.GetButton("Jump") && currentJumpTime > 0.0f)
+
+        if (Input.GetButtonUp("Jump") && rb.linearVelocity.y > 0)
         {
-            currentJumpTime -= Time.deltaTime;
-        }
-        else if (Input.GetButtonUp("Jump"))
-        {
-            currentJumpTime = 0.0f;
+            // corta o pulo se soltar o botão
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, rb.linearVelocity.y * 0.5f);
         }
     }
-
     void OnJump()
     {
         if (currentJumpTime > 0.0f)
@@ -167,6 +159,11 @@ public class PlayerControlls : MonoBehaviour
     public void TakeDamage(int damage)
     {
         life -= damage;
+
+        if (lifeBar != null)
+        {
+            lifeBar.value = life; 
+        }
 
         if (life > 0)
         {
